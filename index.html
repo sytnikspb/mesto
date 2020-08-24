@@ -22,57 +22,17 @@
         </div>
         <button type="button" class="profile__add-button"></button>
       </section>
+
       <section class="places">
-        <article class="place">
-          <img class="place__image" src="./images/Ao_Nang_Krabi_Thailand.jpg" alt="Лазурное побережье, пляж, острова. Вид сверху.">
-          <div class="place__info">
-            <h2 class="place__title">Ао Нанг. Тайланд</h2>
-            <button type="button" class="place__like-button"></button>
-          </div>
-        </article>
-        <article class="place">
-          <img class="place__image" src="./images/Etretat_Normandy_France.jpg" alt="Меловые отвесные скалы побережья пролива Ла-Манш.">
-          <div class="place__info">
-            <h2 class="place__title">Этрета. Франция</h2>
-            <button type="button" class="place__like-button"></button>
-          </div>
-        </article>
-        <article class="place">
-          <img class="place__image" src="./images/Fjadrargljufur_Canyon_Iceland.jpg" alt="Живописный каньон в летний период. Река на дне ущелья.">
-          <div class="place__info">
-            <h2 class="place__title">Фьядрарглуфюр. Исландия</h2>
-            <button type="button" class="place__like-button"></button>
-          </div>
-        </article>
-        <article class="place">
-          <img class="place__image" src="./images/Machu_Picchu_Peru.jpg" alt="Руины древнего города инков на горном хребте Анд.">
-          <div class="place__info">
-            <h2 class="place__title">Мачу-Пикчу. Перу</h2>
-            <button type="button" class="place__like-button"></button>
-          </div>
-        </article>
-        <article class="place">
-          <img class="place__image" src="./images/Sahara_Morocco.jpg" alt="Песчаные барханы. Караван верблюдов с людьми.">
-          <div class="place__info">
-            <h2 class="place__title">Сахара. Африка</h2>
-            <button type="button" class="place__like-button"></button>
-          </div>
-        </article>
-        <article class="place">
-          <img class="place__image" src="./images/Bali_Indonesia.jpg" alt="Одинокая девушка на фоне живописного заката на побережье океана.">
-          <div class="place__info">
-            <h2 class="place__title">Бали. Индонезия</h2>
-            <button type="button" class="place__like-button"></button>
-          </div>
-        </article>
       </section>
     </main>
 
     <footer class="footer">
       <p class="footer__copyright">&copy; 2020 Александр Сытник</p>
     </footer>
-    <div class="popup">
-      <form class="popup__container" name="editprofile">
+
+    <div class="popup popup_type_edit-profile">
+      <form class="popup__container popup__container_type_edit-profile" name="editprofile">
         <button type="button" class="popup__close-button"></button>
         <h3 class="popup__title">Редактировать профиль</h3>
         <input type="text" name="myname" placeholder="Имя" class="popup__input popup__input_type_myname" required>
@@ -80,7 +40,39 @@
         <button type="submit" class="popup__save-button">Сохранить</button>
       </form>
     </div>
+
+    <div class="popup popup_type_add-place">
+      <form class="popup__container popup__container_type_add-place" name="editprofile">
+        <button type="button" class="popup__close-button"></button>
+        <h3 class="popup__title">Новое место</h3>
+        <input type="text" name="placename" placeholder="Название" class="popup__input popup__input_type_place-name" required>
+        <input type="text" name="placelink" placeholder="Ссылка на картинку" class="popup__input popup__input_type_place-link" required>
+        <button type="submit" class="popup__save-button">Создать</button>
+      </form>
+    </div>
+
+    <div class="popup popup_type_illustration">
+      <figure class="popup__illustration">
+        <button type="button" class="popup__close-button"></button>
+        <img class="popup__image" src="#" alt="#">
+        <figcaption class="popup__caption"></figcaption>
+      </figure>
+    </div>
   </div>
+
+  <template id="place-template">
+    <article class="place">
+      <button class="place__remove-button"></button>
+      <img class="place__image" src="" alt="">
+      <div class="place__info">
+        <h2 class="place__title"></h2>
+        <svg class="place__like-button" width="21" height="19" viewBox="0 0 21 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.6237 2.13527L18.6264 2.1379C20.4685 3.96167 20.4723 6.95941 18.6237 8.80788L10.361 17.0702L2.12225 8.83189C1.24217 7.93217 0.75 6.74373 0.75 5.48217C0.75 4.21269 1.22639 3.02826 2.11943 2.13527L2.11943 2.13527L2.12206 2.13262C3.94548 0.291048 6.94141 0.287192 8.78984 2.15384L8.78983 2.15384L8.79245 2.15645L9.83066 3.19462L10.3664 3.7303L10.8966 3.18924L11.9321 2.1327C13.7794 0.288245 16.7775 0.289101 18.6237 2.13527Z" stroke="black" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </article>
+  </template>
+
   <script src="./scripts/index.js"></script>
 </body>
 </html>
