@@ -69,7 +69,8 @@ function updateProfile(event) {
   profileMyName.textContent = inputMyName.value;
   profileProfession.textContent = inputProfession.value;
 
-  closePopup(event.target.closest('.popup'));
+  closePopup(popupEditProfile);
+  // closePopup(event.target.closest('.popup'));  прямое закрытие popupEditProfile уместнее. См. выше.
 }
 
 function removeElement(event) {
@@ -93,7 +94,7 @@ function createPlaceCard(imgLink, name) {
   const placeImage = placeElement.querySelector('.place__image');
 
   placeImage.src = imgLink;
-  placeElement.querySelector('.place__image').alt = name;
+  placeImage.alt = name;
   placeElement.querySelector('.place__title').textContent = name;
 
   placeImage.addEventListener('click', () => openIllustration(imgLink, name));
@@ -110,7 +111,8 @@ function addNewPlace(event) {
 
   places.prepend(card);
 
-  closePopup(event.target.closest('.popup'));
+  closePopup(popupAddPlace);
+  // closePopup(event.target.closest('.popup'));  прямое закрытие popupAddPlace уместнее. См. выше.
 
   formAddPlace.reset();
 }
