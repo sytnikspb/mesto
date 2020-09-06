@@ -30,13 +30,13 @@ const profileMyName = document.querySelector('.profile__myname');
 const profileProfession = document.querySelector('.profile__profession');
 const inputMyName = document.querySelector('.popup__input_type_myname');
 const inputProfession = document.querySelector('.popup__input_type_profession');
-const formEditProfile = document.querySelector('.popup__container_type_edit-profile');
+const formEditProfile = document.querySelector('.popup__form_type_edit-profile');
 const popupEditProfile = document.querySelector('.popup_type_edit-profile');
 
 const profileAddButton = document.querySelector('.profile__add-button');
 const inputPlaceName = document.querySelector('.popup__input_type_place-name');
 const inputPlaceLink = document.querySelector('.popup__input_type_place-link');
-const formAddPlace = document.querySelector('.popup__container_type_add-place');
+const formAddPlace = document.querySelector('.popup__form_type_add-place');
 const popupAddPlace = document.querySelector('.popup_type_add-place');
 
 const places = document.querySelector('.places');
@@ -47,16 +47,27 @@ const popupIllustration = document.querySelector('.popup_type_illustration');
 const illustrationImage = popupIllustration.querySelector('.popup__image');
 const illustrationName = popupIllustration.querySelector('.popup__caption');
 
+const popupsList = document.querySelectorAll('.popup');
 
 function openPopup(popup) {
   popup.classList.add('popup_opened');
+  document.addEventListener('keyup', closePopupEsc);
 }
 
 function closePopup(popup) {
   popup.classList.remove('popup_opened');
+  document.removeEventListener('keyup', closePopupEsc);
+}
+
+function closePopupEsc(event) {
+  const popup = document.querySelector('.popup_opened');
+  if (event.key === 'Escape') {
+    closePopup(popup);
+  }
 }
 
 function openEditProfile(popup) {
+  resetFormBeforeOpen(popup);
   inputMyName.value = profileMyName.textContent;
   inputProfession.value = profileProfession.textContent;
 
@@ -70,7 +81,11 @@ function updateProfile(event) {
   profileProfession.textContent = inputProfession.value;
 
   closePopup(popupEditProfile);
-  // closePopup(event.target.closest('.popup'));  прямое закрытие popupEditProfile уместнее. См. выше.
+}
+
+function openAddPlace(popup) {
+  resetFormBeforeOpen(popup);
+  openPopup(popup);
 }
 
 function removeElement(event) {
@@ -112,15 +127,19 @@ function addNewPlace(event) {
   places.prepend(card);
 
   closePopup(popupAddPlace);
-  // closePopup(event.target.closest('.popup'));  прямое закрытие popupAddPlace уместнее. См. выше.
-
-  formAddPlace.reset();
 }
 
 profileEditButton.addEventListener('click', () => openEditProfile(popupEditProfile));
-profileAddButton.addEventListener('click', () => openPopup(popupAddPlace));
+profileAddButton.addEventListener('click', () => openAddPlace(popupAddPlace));
 formEditProfile.addEventListener('submit', updateProfile);
 formAddPlace.addEventListener('submit', addNewPlace);
+
+popupsList.forEach(popup => popup.addEventListener('click', event => {
+  if (event.currentTarget === event.target) {
+    closePopup(event.currentTarget);
+  }
+}));
+
 popupCloseButtons.forEach(el => el.addEventListener('click', () => closePopup(event.target.closest('.popup'))));
 
 defaultCards.forEach(el => places.prepend(createPlaceCard(el.link, el.name)));
