@@ -1,53 +1,31 @@
-const defaultCards = [
-  {
-    name: 'Бали. Индонезия',
-    link: 'https://images.unsplash.com/photo-1482348838597-b97cc6c86a88?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=751&q=80'
-  },
-  {
-    name: 'Сахара. Африка',
-    link: 'https://images.unsplash.com/photo-1489493585363-d69421e0edd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80'
-  },
-  {
-    name: 'Мачу-Пикчу. Перу',
-    link: 'https://images.unsplash.com/photo-1415804941191-bc0c3bbac10d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80'
-  },
-  {
-    name: 'Фьядрарглуфюр. Исландия',
-    link: 'https://images.unsplash.com/photo-1536610350990-079f9db69b55?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=375&q=80'
-  },
-  {
-    name: 'Этрета. Франция',
-    link: 'https://images.unsplash.com/photo-1541187714594-731deadcd16a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80'
-  },
-  {
-    name: 'Ао Нанг. Тайланд',
-    link: 'https://images.unsplash.com/photo-1483683804023-6ccdb62f86ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=375&q=80'
-  }
-];
+import {
+  profileEditButton,
+  profileMyName,
+  profileProfession,
+  inputMyName,
+  inputProfession,
+  formEditProfile,
+  popupEditProfile,
+  profileAddButton,
+  inputPlaceName,
+  inputPlaceLink,
+  formAddPlace,
+  popupAddPlace,
+  places,
+  placeTemplateSelector,
+  popupCloseButtons,
+  popupIllustration,
+  illustrationImage,
+  illustrationName,
+  popupsList
+} from './data.js';
 
-const profileEditButton = document.querySelector('.profile__edit-button');
-const profileMyName = document.querySelector('.profile__myname');
-const profileProfession = document.querySelector('.profile__profession');
-const inputMyName = document.querySelector('.popup__input_type_myname');
-const inputProfession = document.querySelector('.popup__input_type_profession');
-const formEditProfile = document.querySelector('.popup__form_type_edit-profile');
-const popupEditProfile = document.querySelector('.popup_type_edit-profile');
+import { defaultCards } from './defaultCards.js';
+import { Card } from './Card.js';
+import { FormValidator, enableValidationObj } from './Validate.js';
 
-const profileAddButton = document.querySelector('.profile__add-button');
-const inputPlaceName = document.querySelector('.popup__input_type_place-name');
-const inputPlaceLink = document.querySelector('.popup__input_type_place-link');
-const formAddPlace = document.querySelector('.popup__form_type_add-place');
-const popupAddPlace = document.querySelector('.popup_type_add-place');
-
-const places = document.querySelector('.places');
-const placeTemplate = document.querySelector('#place-template').content;
-const popupCloseButtons = document.querySelectorAll('.popup__close-button');
-
-const popupIllustration = document.querySelector('.popup_type_illustration');
-const illustrationImage = popupIllustration.querySelector('.popup__image');
-const illustrationName = popupIllustration.querySelector('.popup__caption');
-
-const popupsList = document.querySelectorAll('.popup');
+const formAddPlaceValidator = new FormValidator(enableValidationObj, formAddPlace);
+const formEditProfileValidator = new FormValidator(enableValidationObj, formEditProfile);
 
 function openPopup(popup) {
   popup.classList.add('popup_opened');
@@ -66,8 +44,15 @@ function closePopupEsc(event) {
   }
 }
 
+function closePopupOverlay(event) {
+  if (event.currentTarget === event.target) {
+    closePopup(event.currentTarget);
+  }
+}
+
 function openEditProfile(popup) {
-  resetFormBeforeOpen(popup);
+  formEditProfileValidator.resetFormBeforeOpen();
+
   inputMyName.value = profileMyName.textContent;
   inputProfession.value = profileProfession.textContent;
 
@@ -84,49 +69,28 @@ function updateProfile(event) {
 }
 
 function openAddPlace(popup) {
-  resetFormBeforeOpen(popup);
+  formAddPlaceValidator.resetFormBeforeOpen();
+
   openPopup(popup);
-}
-
-function removeElement(event) {
-  event.target.closest('.place').remove();
-}
-
-function toggleLike(event) {
-  event.currentTarget.classList.toggle('place__like-button_active');
-}
-
-function openIllustration(imgLink, caption) {
-  illustrationImage.src = imgLink;
-  illustrationImage.alt = caption;
-  illustrationName.textContent = caption;
-
-  openPopup(popupIllustration);
-}
-
-function createPlaceCard(imgLink, name) {
-  const placeElement = placeTemplate.cloneNode(true);
-  const placeImage = placeElement.querySelector('.place__image');
-
-  placeImage.src = imgLink;
-  placeImage.alt = name;
-  placeElement.querySelector('.place__title').textContent = name;
-
-  placeImage.addEventListener('click', () => openIllustration(imgLink, name));
-  placeElement.querySelector('.place__remove-button').addEventListener('click', removeElement);
-  placeElement.querySelector('.place__like-button').addEventListener('click', toggleLike);
-
-  return placeElement;
 }
 
 function addNewPlace(event) {
   event.preventDefault();
 
-  const card = createPlaceCard(inputPlaceLink.value, inputPlaceName.value);
+  const cardData = {
+    name: inputPlaceName.value,
+    link: inputPlaceLink.value
+  };
 
-  places.prepend(card);
-
+  addingCard(cardData, placeTemplateSelector);
   closePopup(popupAddPlace);
+}
+
+function addingCard(el, placeTemplateSelector) {
+  const card = new Card(el, placeTemplateSelector, openPopup, popupIllustration, illustrationImage, illustrationName);
+  const placeElement = card.createPlaceCard();
+
+  places.prepend(placeElement);
 }
 
 profileEditButton.addEventListener('click', () => openEditProfile(popupEditProfile));
@@ -134,12 +98,10 @@ profileAddButton.addEventListener('click', () => openAddPlace(popupAddPlace));
 formEditProfile.addEventListener('submit', updateProfile);
 formAddPlace.addEventListener('submit', addNewPlace);
 
-popupsList.forEach(popup => popup.addEventListener('click', event => {
-  if (event.currentTarget === event.target) {
-    closePopup(event.currentTarget);
-  }
-}));
-
+popupsList.forEach(popup => popup.addEventListener('click', closePopupOverlay));
 popupCloseButtons.forEach(el => el.addEventListener('click', () => closePopup(event.target.closest('.popup'))));
 
-defaultCards.forEach(el => places.prepend(createPlaceCard(el.link, el.name)));
+defaultCards.forEach((el) => addingCard(el, placeTemplateSelector));
+
+formAddPlaceValidator.enableValidation();
+formEditProfileValidator.enableValidation();
